@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Shootable
+  - SelfCapitalShipPart
+  - FriendlyObject
+  - EnemyObject
+  - TargetLead
+  - FiringPosition
   layers:
   - Default
   - TransparentFX
@@ -19,7 +24,7 @@ TagManager:
   - Postprocessing
   - Projectile
   - SpawnPoint
-  - 
+  - TurretColliders
   - 
   - 
   - 
