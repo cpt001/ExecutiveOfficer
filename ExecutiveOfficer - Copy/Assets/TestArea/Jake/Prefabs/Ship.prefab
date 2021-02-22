@@ -47,11 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelBase: {fileID: 5396990145855057356}
   barrelEnd: {fileID: 5396990145363599974}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8297212120637291560, guid: 9a86ffb382ff6b6478130b7d853fdb62,
+    type: 3}
   fireRate: 1
   swivelSpeed: 10
-  swivelXMin: 10
-  swivelXMax: -180
+  swivelXDownwardsDegrees: 0
 --- !u!1 &514011024109019802
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,11 +417,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelBase: {fileID: 7615013134305640586}
   barrelEnd: {fileID: 7615013133722046240}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8297212120637291560, guid: 9a86ffb382ff6b6478130b7d853fdb62,
+    type: 3}
   fireRate: 1
   swivelSpeed: 10
-  swivelXMin: 10
-  swivelXMax: -180
+  swivelXDownwardsDegrees: 0
 --- !u!1 &2511744823927511404
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,11 +469,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelBase: {fileID: 7693797272506777823}
   barrelEnd: {fileID: 7693797273099423605}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8297212120637291560, guid: 9a86ffb382ff6b6478130b7d853fdb62,
+    type: 3}
   fireRate: 1
   swivelSpeed: 10
-  swivelXMin: 10
-  swivelXMax: -180
+  swivelXDownwardsDegrees: 0
 --- !u!1 &2589552653256832831
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,11 +769,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelBase: {fileID: 4715130857030030361}
   barrelEnd: {fileID: 4715130857647840179}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8297212120637291560, guid: 9a86ffb382ff6b6478130b7d853fdb62,
+    type: 3}
   fireRate: 1
   swivelSpeed: 10
-  swivelXMin: 10
-  swivelXMax: -180
+  swivelXDownwardsDegrees: 0
 --- !u!1 &4715130855688711874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1317,11 +1317,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelBase: {fileID: 514011024600345905}
   barrelEnd: {fileID: 514011024109019803}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8297212120637291560, guid: 9a86ffb382ff6b6478130b7d853fdb62,
+    type: 3}
   fireRate: 1
   swivelSpeed: 10
-  swivelXMin: 10
-  swivelXMax: -180
+  swivelXDownwardsDegrees: 0
 --- !u!1 &7615013132963281489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1865,11 +1865,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelBase: {fileID: 2589552653882898580}
   barrelEnd: {fileID: 2589552653256832830}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8297212120637291560, guid: 9a86ffb382ff6b6478130b7d853fdb62,
+    type: 3}
   fireRate: 1
   swivelSpeed: 10
-  swivelXMin: 10
-  swivelXMax: -180
+  swivelXDownwardsDegrees: 0
 --- !u!1 &8600722459161023296
 GameObject:
   m_ObjectHideFlags: 0
@@ -2094,6 +2094,8 @@ MonoBehaviour:
   yawSpeed: 250
   rollSpeed: 25
   shipBody: {fileID: 8600722459320727498}
+  isTargeting: 0
+  turretGroups: []
 --- !u!1 &8600722459331108230
 GameObject:
   m_ObjectHideFlags: 0

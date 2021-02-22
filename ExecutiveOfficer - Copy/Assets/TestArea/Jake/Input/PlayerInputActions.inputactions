@@ -44,6 +44,30 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "ToggleTargetingMode",
+                    "type": "Button",
+                    "id": "0cf14897-b0fe-44e1-92b2-1fb70e3cf406",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "CycleTurretGroups",
+                    "type": "Button",
+                    "id": "351a557c-ffce-4efd-9c75-d6a6aa19a7b9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "LockTarget",
+                    "type": "Button",
+                    "id": "93599924-5468-4350-9789-248dcdbb0dec",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -187,6 +211,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "CameraLook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf30efec-5d35-49a4-adef-bdd75b892fb6",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleTargetingMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "30672735-2ea5-453b-a198-4983c4c9e2b0",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CycleTurretGroups",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06ef2936-6539-49c1-96d3-e2db7a2b77ed",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LockTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

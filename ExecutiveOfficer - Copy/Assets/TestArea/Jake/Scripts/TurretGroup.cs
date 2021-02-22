@@ -48,6 +48,13 @@ public class TurretGroup {
 
         set {
             lockedOnModule = value;
+            AssignTurretTargets();
+        }
+    }
+
+    private void AssignTurretTargets() {
+        for (int i = 0; i < turretArray.Count; i++) {
+            turretArray[i].TurretTarget = lockedOnModule;
         }
     }
 }

@@ -57,6 +57,30 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ToggleTargetingMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""0cf14897-b0fe-44e1-92b2-1fb70e3cf406"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CycleTurretGroups"",
+                    ""type"": ""Button"",
+                    ""id"": ""351a557c-ffce-4efd-9c75-d6a6aa19a7b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LockTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""93599924-5468-4350-9789-248dcdbb0dec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -202,6 +226,39 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""action"": ""CameraLook"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf30efec-5d35-49a4-adef-bdd75b892fb6"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleTargetingMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30672735-2ea5-453b-a198-4983c4c9e2b0"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleTurretGroups"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06ef2936-6539-49c1-96d3-e2db7a2b77ed"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -215,6 +272,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_ShipControl_Roll = m_ShipControl.FindAction("Roll", throwIfNotFound: true);
         m_ShipControl_Yaw = m_ShipControl.FindAction("Yaw", throwIfNotFound: true);
         m_ShipControl_CameraLook = m_ShipControl.FindAction("CameraLook", throwIfNotFound: true);
+        m_ShipControl_ToggleTargetingMode = m_ShipControl.FindAction("ToggleTargetingMode", throwIfNotFound: true);
+        m_ShipControl_CycleTurretGroups = m_ShipControl.FindAction("CycleTurretGroups", throwIfNotFound: true);
+        m_ShipControl_LockTarget = m_ShipControl.FindAction("LockTarget", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -269,6 +329,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_ShipControl_Roll;
     private readonly InputAction m_ShipControl_Yaw;
     private readonly InputAction m_ShipControl_CameraLook;
+    private readonly InputAction m_ShipControl_ToggleTargetingMode;
+    private readonly InputAction m_ShipControl_CycleTurretGroups;
+    private readonly InputAction m_ShipControl_LockTarget;
     public struct ShipControlActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -278,6 +341,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         public InputAction @Roll => m_Wrapper.m_ShipControl_Roll;
         public InputAction @Yaw => m_Wrapper.m_ShipControl_Yaw;
         public InputAction @CameraLook => m_Wrapper.m_ShipControl_CameraLook;
+        public InputAction @ToggleTargetingMode => m_Wrapper.m_ShipControl_ToggleTargetingMode;
+        public InputAction @CycleTurretGroups => m_Wrapper.m_ShipControl_CycleTurretGroups;
+        public InputAction @LockTarget => m_Wrapper.m_ShipControl_LockTarget;
         public InputActionMap Get() { return m_Wrapper.m_ShipControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -302,6 +368,15 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @CameraLook.started -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnCameraLook;
                 @CameraLook.performed -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnCameraLook;
                 @CameraLook.canceled -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnCameraLook;
+                @ToggleTargetingMode.started -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnToggleTargetingMode;
+                @ToggleTargetingMode.performed -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnToggleTargetingMode;
+                @ToggleTargetingMode.canceled -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnToggleTargetingMode;
+                @CycleTurretGroups.started -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnCycleTurretGroups;
+                @CycleTurretGroups.performed -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnCycleTurretGroups;
+                @CycleTurretGroups.canceled -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnCycleTurretGroups;
+                @LockTarget.started -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnLockTarget;
+                @LockTarget.performed -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnLockTarget;
+                @LockTarget.canceled -= m_Wrapper.m_ShipControlActionsCallbackInterface.OnLockTarget;
             }
             m_Wrapper.m_ShipControlActionsCallbackInterface = instance;
             if (instance != null)
@@ -321,6 +396,15 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @CameraLook.started += instance.OnCameraLook;
                 @CameraLook.performed += instance.OnCameraLook;
                 @CameraLook.canceled += instance.OnCameraLook;
+                @ToggleTargetingMode.started += instance.OnToggleTargetingMode;
+                @ToggleTargetingMode.performed += instance.OnToggleTargetingMode;
+                @ToggleTargetingMode.canceled += instance.OnToggleTargetingMode;
+                @CycleTurretGroups.started += instance.OnCycleTurretGroups;
+                @CycleTurretGroups.performed += instance.OnCycleTurretGroups;
+                @CycleTurretGroups.canceled += instance.OnCycleTurretGroups;
+                @LockTarget.started += instance.OnLockTarget;
+                @LockTarget.performed += instance.OnLockTarget;
+                @LockTarget.canceled += instance.OnLockTarget;
             }
         }
     }
@@ -332,5 +416,8 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         void OnRoll(InputAction.CallbackContext context);
         void OnYaw(InputAction.CallbackContext context);
         void OnCameraLook(InputAction.CallbackContext context);
+        void OnToggleTargetingMode(InputAction.CallbackContext context);
+        void OnCycleTurretGroups(InputAction.CallbackContext context);
+        void OnLockTarget(InputAction.CallbackContext context);
     }
 }

@@ -18,6 +18,10 @@ public class Projectile : MonoBehaviour {
         StartCoroutine(HandleProjectileLifetime());
     }
 
+    private void FixedUpdate() {
+        transform.Translate(Vector3.forward * movementSpeed * Time.fixedDeltaTime);
+    }
+
     public void DamageModule(ShipModule module) {
         module.ApplyDamage(damage);
     }
@@ -26,9 +30,9 @@ public class Projectile : MonoBehaviour {
         yield return new WaitForSeconds(lifetime);
     }
 
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.transform != transform) {
-            ShipModule module = collision.transform.GetComponent<ShipModule>();
+    private void OnTriggerEnter(Collider other) {
+        if (other.transform != transform) {
+            ShipModule module = other.transform.GetComponent<ShipModule>();
             if (module != null) {
                 module.ApplyDamage(damage);
             }

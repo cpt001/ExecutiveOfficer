@@ -12,6 +12,10 @@ public class ShipModule : MonoBehaviour {
         health -= damage;
         if (health <= 0) {
             hitBox.enabled = false;
+            //destroyed module event
+            Events.instance.Raise(new ModuleDestroyedEvent(this));
+            //destroy module
+            Destroy(gameObject);
         }
     }
 }

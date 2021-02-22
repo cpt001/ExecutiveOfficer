@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class ShipController : MonoBehaviour {
     PlayerInputActions inputActions;
 
+    [Header("Flight Control Variables")]
     [SerializeField]
     private float thrustSpeed = 0.0f;
     [SerializeField]
@@ -20,13 +22,19 @@ public class ShipController : MonoBehaviour {
     private float inputYawAxis = 0.0f;
     private float inputRollAxis = 0.0f;
 
+    [Header("Direct Ref Variables")]
     [SerializeField]
     private Rigidbody shipBody = null;
 
     private Camera gameCamera;
+    [SerializeField]
+    private CinemachineVirtualCameraBase flightCamera;
+    [SerializeField]
+    private List<CinemachineVirtualCameraBase> targetingCameras = new List<CinemachineVirtualCameraBase>();
 
     private int shipModuleLayer;
 
+    [Header("Weapon System Variables")]
     [SerializeField]
     private bool isTargeting = false;
 
@@ -56,6 +64,24 @@ public class ShipController : MonoBehaviour {
         BindInputActions();
     }
 
+    private void OnEnable() {
+        AddListeners();
+        inputActions.Enable();
+    }
+
+    private void OnDisable() {
+        RemoveListeners();
+        inputActions.Disable();
+    }
+
+    private void AddListeners() {
+        Events.instance.AddListener<ChangeGameCameraEvent>(HandleCameraChange);
+    }
+
+    private void RemoveListeners() {
+        Events.instance.RemoveListener<ChangeGameCameraEvent>(HandleCameraChange);
+    }
+
     private void BindInputActions() {
         inputActions = new PlayerInputActions();
         inputActions.ShipControl.Thrust.performed += ctx => inputThrustAxis = ctx.ReadValue<float>();
@@ -64,6 +90,7 @@ public class ShipController : MonoBehaviour {
         inputActions.ShipControl.Yaw.performed += ctx => inputYawAxis = ctx.ReadValue<float>();
     }
 
+    #region FlightMethods
     private void HandleShipThrust() {
         Debug.DrawRay(shipBody.transform.position, shipBody.transform.forward * 10, Color.cyan);
         shipBody.AddForce(shipBody.transform.forward * (inputThrustAxis * thrustSpeed), ForceMode.Force);
@@ -82,34 +109,136 @@ public class ShipController : MonoBehaviour {
         shipBody.AddTorque(shipBody.transform.forward * (inputRollAxis * rollSpeed), ForceMode.Force);
     }
 
+    private void DebugShipProperties() {
+        //print(shipBody.velocity);
+    }
+    #endregion
+
+    #region TargetingMethods
     private void HandleTargeting() {
         if (isTargeting) {
-            Ray aimRay = new Ray(gameCamera.transform.position, gameCamera.transform.forward);
-            RaycastHit hit = new RaycastHit();
-            if (Physics.Raycast(aimRay, out hit, Mathf.Infinity, shipModuleLayer)) {
-                ShipModule module = hit.collider.GetComponent<ShipModule>();
-                if (module != null && !module.transform.IsChildOf(transform)) {
-                    //this is an enemy module
-                    print("Raycast hit an enemy module!");
-                    //highlight module if not highlighted or locked on
-                    if (turretGroups[selectedTurretGroupIndex].HighlightedModule != module && turretGroups[selectedTurretGroupIndex].LockedOnModule != module) {
-                        turretGroups[selectedTurretGroupIndex].HighlightedModule = module;
-                        print("Highlighted an enemy module!");
-                    }
+            ShipModule tmpModule = GetModuleInSight();
+            HandleHighlighting(turretGroups[selectedTurretGroupIndex], tmpModule);
+        }
+    }
+
+    //raycast function in aiming mode
+    private ShipModule GetModuleInSight() {
+        Ray aimRay = new Ray(gameCamera.transform.position, gameCamera.transform.forward);
+        RaycastHit hit = new RaycastHit();
+        if (Physics.Raycast(aimRay, out hit, Mathf.Infinity, shipModuleLayer)) {
+            ShipModule module = hit.collider.GetComponent<ShipModule>();
+            if (module != null && !module.transform.IsChildOf(transform)) {
+                //this is an enemy module
+                //print("Raycast hit an enemy module!");
+                return module;
+            }
+        }
+        return null;
+    }
+
+    private void HandleHighlighting(TurretGroup group, ShipModule target) {
+        if (target == null) {
+            if (group.HighlightedModule != null) {
+                UnhighlightTarget(group);
+                return;
+            }
+        }
+        else {
+            if (target == group.LockedOnModule) {
+                if (target == group.HighlightedModule) {
+                    UnhighlightTarget(group);
+                    return;
+                }
+            }
+            if (target != group.HighlightedModule) {
+                if (group.HighlightedModule != null) {
+                    UnhighlightTarget(group);
+                }
+                if (target != group.LockedOnModule) {
+                    HighlightTarget(group, target);
                 }
             }
         }
     }
 
+    private void HandleTargetLocking(TurretGroup group, ShipModule target) {
+        if (target != null) {
+            if (target == group.LockedOnModule) {
+                UnlockTarget(group);
+                return;
+            }
+            if (group.LockedOnModule != null) {
+                //unlock
+                UnlockTarget(group);
+            }
+            //lock
+            LockOnTarget(group, target);
+        }
+    }
+
+    private void HighlightTarget(TurretGroup group, ShipModule target) {
+        //print("Highlighted an enemy module!");
+        group.HighlightedModule = target;
+        //highlight event here
+        Events.instance.Raise(new ShipTargetingEvent(target, TargetingMode.HIGHLIGHT));
+    }
+
+    private void UnhighlightTarget(TurretGroup group) {
+        //print("Unhighlighted an enemy module!");
+        //unhighlight event here
+        Events.instance.Raise(new ShipTargetingEvent(group.HighlightedModule, TargetingMode.UNHIGHLIGHT));
+        group.HighlightedModule = null;
+    }
+
+    private void LockOnTarget(TurretGroup group, ShipModule target) {
+        //print("Locked on to an enemy module!");
+        group.LockedOnModule = target;
+        //lock on event here
+        Events.instance.Raise(new ShipTargetingEvent(target, TargetingMode.LOCK));
+    }
+
+    private void UnlockTarget(TurretGroup group) {
+        //print("Unlocked from an enemy module!");
+        //unlock target event here
+        Events.instance.Raise(new ShipTargetingEvent(group.LockedOnModule, TargetingMode.UNLOCK));
+        group.LockedOnModule = null;
+    }
+    #endregion
+
+    private void HandleCameraChange(ChangeGameCameraEvent cameraEvent) {
+        if (cameraEvent.isBlendFinished == true) {
+            if (cameraEvent.gameCamera == flightCamera) {
+                EnterFlightMode();
+                return;
+            }
+            for (int i = 0; i < targetingCameras.Count; i++) {
+                if (cameraEvent.gameCamera == targetingCameras[i]) {
+                    if (!isTargeting) {
+                        EnterTargetMode();
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    private void EnterFlightMode() {
+        Events.instance.Raise(new EnterFlightEvent());
+        isTargeting = false;
+    }
+
+    private void EnterTargetMode() {
+        Events.instance.Raise(new EnterTargetingEvent());
+        isTargeting = true;
+    }
+
     private void ToggleTargetingMode() {
         if (isTargeting) {
-            isTargeting = false;
-            //remove crosshair
-            //switch to flight camera
+            Events.instance.Raise(new ChangeGameCameraEvent(flightCamera, false));
         }
         else {
-            //create crosshair
-            //switch to turret camera based on index
+            Events.instance.Raise(new ChangeGameCameraEvent(targetingCameras[selectedTurretGroupIndex], false));
         }
     }
 
@@ -118,18 +247,19 @@ public class ShipController : MonoBehaviour {
         if (selectedTurretGroupIndex >= turretGroups.Count) {
             selectedTurretGroupIndex = 0;
         }
-        //handle camera switching
+        Events.instance.Raise(new ChangeGameCameraEvent(targetingCameras[selectedTurretGroupIndex], false));
     }
 
-    private void OnEnable() {
-        inputActions.Enable();
+    public void OnCycleTurretGroups() {
+        SwitchTurretGroup();
     }
 
-    private void OnDisable() {
-        inputActions.Disable();
+    public void OnToggleTargetingMode() {
+        ToggleTargetingMode();
     }
 
-    private void DebugShipProperties() {
-        //print(shipBody.velocity);
+    public void OnLockTarget() {
+        //print("TagetLock input action called!");
+        HandleTargetLocking(turretGroups[selectedTurretGroupIndex], GetModuleInSight());
     }
 }

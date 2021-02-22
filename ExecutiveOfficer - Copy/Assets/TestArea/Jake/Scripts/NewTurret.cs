@@ -37,20 +37,58 @@ public class NewTurret : MonoBehaviour {
         }
     }
 
+    private void OnEnable() {
+        AddEventListeners();
+    }
+
+    private void OnDisable() {
+        RemoveEventListeners();
+    }
+
     private void Awake() {
-        turretTarget = GameObject.Find("DummyTarget").GetComponent<ShipModule>();
+        isLoaded = true;
     }
 
     private void Update() {
         if (turretTarget != null) {
             RotateTurret();
+            AimAtTarget();
+            Fire();
         }
+    }
+
+    private void AddEventListeners() {
+        Events.instance.AddListener<ModuleDestroyedEvent>(OnTargetModuleDestroyed);
+    }
+
+    private void RemoveEventListeners() {
+        Events.instance.RemoveListener<ModuleDestroyedEvent>(OnTargetModuleDestroyed);
     }
 
     private void AimAtTarget() {
         //calculate point to aim at
         //aim at point
         //if point is desired final position, isAimed = true;
+        //raycast for target module
+        if (IsModuleInSight()) {
+            isAimed = true;
+        }
+    }
+
+    //raycast function in aiming mode
+    private bool IsModuleInSight () {
+        Ray aimRay = new Ray(barrelEnd.position, barrelEnd.forward);
+        RaycastHit hit = new RaycastHit();
+        if (Physics.Raycast(aimRay, out hit, Mathf.Infinity)) {
+            ShipModule module = hit.collider.GetComponent<ShipModule>();
+            if (module != null && module == turretTarget) {
+                //this is the target module
+                //print("Raycast hit target module!");
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     private void Fire() {
@@ -89,4 +127,11 @@ public class NewTurret : MonoBehaviour {
     private void LaunchProjectile() {
         Instantiate(projectilePrefab, barrelEnd.position, barrelEnd.rotation);
     }
+
+    #region EventListeners
+    private void OnTargetModuleDestroyed(ModuleDestroyedEvent moduleEvent) {
+        turretTarget = null;
+        isAimed = false;
+    }
+    #endregion
 }
