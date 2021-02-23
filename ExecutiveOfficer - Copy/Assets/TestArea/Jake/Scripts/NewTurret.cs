@@ -130,8 +130,10 @@ public class NewTurret : MonoBehaviour {
 
     #region EventListeners
     private void OnTargetModuleDestroyed(ModuleDestroyedEvent moduleEvent) {
-        turretTarget = null;
-        isAimed = false;
+        if (moduleEvent.destroyedModule == turretTarget) {
+            turretTarget = null;
+            isAimed = false;
+        }
     }
     #endregion
 }

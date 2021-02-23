@@ -163,17 +163,14 @@ public class ShipController : MonoBehaviour {
     }
 
     private void HandleTargetLocking(TurretGroup group, ShipModule target) {
-        if (target != null) {
-            if (target == group.LockedOnModule) {
-                UnlockTarget(group);
-                return;
-            }
-            if (group.LockedOnModule != null) {
-                //unlock
-                UnlockTarget(group);
-            }
-            //lock
+        ShipModule tmpModule = null;
+        if (group.LockedOnModule != null) {
+            tmpModule = group.LockedOnModule;
+            UnlockTarget(group);
+        }
+        if (target != null && target != tmpModule) {
             LockOnTarget(group, target);
+            return;
         }
     }
 
@@ -189,6 +186,14 @@ public class ShipController : MonoBehaviour {
         //unhighlight event here
         Events.instance.Raise(new ShipTargetingEvent(group.HighlightedModule, TargetingMode.UNHIGHLIGHT));
         group.HighlightedModule = null;
+    }
+
+    private void UnhighlightModules() {
+        for (int i = 0; i < turretGroups.Count; i++) {
+            if (turretGroups[i].HighlightedModule != null) {
+                UnhighlightTarget(turretGroups[i]);
+            }
+        }
     }
 
     private void LockOnTarget(TurretGroup group, ShipModule target) {
@@ -235,6 +240,7 @@ public class ShipController : MonoBehaviour {
 
     private void ToggleTargetingMode() {
         if (isTargeting) {
+            UnhighlightModules();
             Events.instance.Raise(new ChangeGameCameraEvent(flightCamera, false));
         }
         else {
@@ -247,7 +253,9 @@ public class ShipController : MonoBehaviour {
         if (selectedTurretGroupIndex >= turretGroups.Count) {
             selectedTurretGroupIndex = 0;
         }
-        Events.instance.Raise(new ChangeGameCameraEvent(targetingCameras[selectedTurretGroupIndex], false));
+        if (isTargeting) {
+            Events.instance.Raise(new ChangeGameCameraEvent(targetingCameras[selectedTurretGroupIndex], false));
+        }
     }
 
     public void OnCycleTurretGroups() {
