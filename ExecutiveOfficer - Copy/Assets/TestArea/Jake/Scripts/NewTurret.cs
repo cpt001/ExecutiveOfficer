@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +24,9 @@ public class NewTurret : MonoBehaviour {
     private float xAngle = 0.0f;
     //private float yAngle = 0.0f;
 
+    private Rigidbody shipRigidbody;
+    private float projectileSpeed;
+    private Vector3 projectileSize;
 
     private ShipModule turretTarget;
 
@@ -37,6 +40,16 @@ public class NewTurret : MonoBehaviour {
         }
     }
 
+    public Rigidbody ShipRigidbody {
+        get {
+            return shipRigidbody;
+        }
+
+        set {
+            shipRigidbody = value;
+        }
+    }
+
     private void OnEnable() {
         AddEventListeners();
     }
@@ -46,13 +59,19 @@ public class NewTurret : MonoBehaviour {
     }
 
     private void Awake() {
+        Init();
+    }
+
+    private void Init() {
         isLoaded = true;
+        shipRigidbody = GameFunctionHelper.GetRootRigidBody(transform);
+        projectileSpeed = projectilePrefab.GetComponent<Projectile>().MovementSpeed;
+        projectileSize = projectilePrefab.GetComponent<BoxCollider>().size / 2.0f;
     }
 
     private void Update() {
         if (turretTarget != null) {
             RotateTurret();
-            AimAtTarget();
             Fire();
         }
     }
@@ -65,25 +84,15 @@ public class NewTurret : MonoBehaviour {
         Events.instance.RemoveListener<ModuleDestroyedEvent>(OnTargetModuleDestroyed);
     }
 
-    private void AimAtTarget() {
-        //calculate point to aim at
-        //aim at point
-        //if point is desired final position, isAimed = true;
-        //raycast for target module
-        if (IsModuleInSight()) {
-            isAimed = true;
-        }
-    }
-
-    //raycast function in aiming mode
-    private bool IsModuleInSight () {
+    private bool IsOwnShipInSight() {
         Ray aimRay = new Ray(barrelEnd.position, barrelEnd.forward);
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(aimRay, out hit, Mathf.Infinity)) {
-            ShipModule module = hit.collider.GetComponent<ShipModule>();
-            if (module != null && module == turretTarget) {
-                //this is the target module
-                //print("Raycast hit target module!");
+        //GameFunctionHelper.DebugDrawCubePoints(GameFunctionHelper.DebugCubePoints(barrelEnd.position + barrelEnd.forward * projectileSize.z, projectileSize, barrelBase.rotation));
+        if (Physics.BoxCast(barrelEnd.position + barrelEnd.forward * projectileSize.z, projectileSize, barrelEnd.forward, out hit, barrelBase.rotation, Mathf.Infinity)) {
+            Transform hitRoot = hit.transform.root;
+            if (transform.root == hitRoot) {
+                //own ship in sight
+                //print("Raycast hit own ship!");
                 return true;
             }
             return false;
@@ -102,20 +111,38 @@ public class NewTurret : MonoBehaviour {
     }
 
     private void RotateTurret() {
-        //print("Starting Rotation: " + barrelBase.localEulerAngles);
-        Vector3 relativePos = turretTarget.transform.position - barrelBase.position;
-        Vector3 tgtRot = Quaternion.LookRotation(relativePos, Vector3.up).eulerAngles;
-        //print("Original Target Rotation: " + tgtRot);
-
-        if (tgtRot.x < 170) {
-            xAngle = Mathf.Clamp(tgtRot.x, 0.0f, swivelXDownwardsDegrees);
-            tgtRot = new Vector3(xAngle, tgtRot.y, 0.0f);
-            //print("New Clamped Rotation: " + tgtRot);
+        //print("Starting Rotation: " + barrelBase.localRotation.eulerAngles + "!");
+        //print("Barrel base position: " + barrelBase.position + ", " + "Shooting ship velocity: " + shipRigidbody.velocity + ", " + "Projectile speed: " + projectileSpeed + ", " + "Target position: " + turretTarget.transform.position + ", " + "Target ship velocity: " + GameFunctionHelper.GetRootRigidBody(turretTarget.transform).velocity + "!");
+        Vector3 relativePos = PredictiveAim.FirstOrderIntercept(barrelBase.position, shipRigidbody.velocity, projectileSpeed, turretTarget.transform.position, GameFunctionHelper.GetRootRigidBody(turretTarget.transform).velocity) - barrelBase.position;
+        //print("Relative position: " + relativePos + "!");
+        Quaternion tgtRot = Quaternion.LookRotation(relativePos, barrelBase.transform.up);
+        //print("Target rotation: " + tgtRot + "!");
+        //barrelBase.transform.rotation = tgtRot;
+        barrelBase.transform.rotation = Quaternion.RotateTowards(barrelBase.rotation, tgtRot, swivelSpeed * Time.deltaTime);
+        HardClampTurretRotation();
+        //print("Target Rotation = " + tgtRot + "!");
+        //print("Current Rotation = " + barrelBase.transform.rotation.eulerAngles);
+        if (barrelBase.transform.rotation == tgtRot && !IsOwnShipInSight()) {
+            isAimed = true;
         }
-
-        //barrelBase.rotation = Quaternion.Euler(tgtRot);
-        barrelBase.transform.rotation = Quaternion.RotateTowards(barrelBase.rotation, Quaternion.Euler(tgtRot), swivelSpeed * Time.deltaTime);
+        else {
+            isAimed = false;
+        }
         Debug.DrawRay(barrelBase.position, barrelEnd.forward * 100.0f, Color.cyan);
+    }
+
+    private void HardClampTurretRotation() {
+        Vector3 clampedRotation = barrelBase.transform.localRotation.eulerAngles;
+        //clamp x
+        if (barrelBase.transform.localRotation.eulerAngles.x > swivelXDownwardsDegrees && barrelBase.transform.localRotation.eulerAngles.x < 90.0f) {
+            clampedRotation = new Vector3(swivelXDownwardsDegrees, clampedRotation.y, clampedRotation.z);
+        }
+        else if (barrelBase.transform.localRotation.eulerAngles.x >= 90.0f && barrelBase.transform.localRotation.eulerAngles.x < 180.0f - swivelXDownwardsDegrees) {
+            clampedRotation = new Vector3(180.0f - swivelXDownwardsDegrees, clampedRotation.y, clampedRotation.z);
+        }
+        //clamp z
+        clampedRotation = new Vector3(clampedRotation.x, clampedRotation.y, 0.0f);
+        barrelBase.transform.localRotation = Quaternion.Euler(clampedRotation);
     }
 
     private IEnumerator ReloadTurret() {
@@ -125,7 +152,11 @@ public class NewTurret : MonoBehaviour {
     }
 
     private void LaunchProjectile() {
-        Instantiate(projectilePrefab, barrelEnd.position, barrelEnd.rotation);
+        //spawn at end
+        //GameObject projObj = Instantiate(projectilePrefab, barrelEnd.position, barrelEnd.rotation);
+        //spawn at base
+        GameObject projObj = Instantiate(projectilePrefab, barrelBase.position, barrelBase.rotation);
+        projObj.GetComponent<Projectile>().InitializeProjectileVelocity(shipRigidbody.velocity);
     }
 
     #region EventListeners

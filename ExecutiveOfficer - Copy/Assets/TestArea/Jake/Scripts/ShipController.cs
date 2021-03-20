@@ -94,7 +94,6 @@ public class ShipController : MonoBehaviour {
     private void HandleShipThrust() {
         Debug.DrawRay(shipBody.transform.position, shipBody.transform.forward * 10, Color.cyan);
         shipBody.AddForce(shipBody.transform.forward * (inputThrustAxis * thrustSpeed), ForceMode.Force);
-
     }
 
     private void HandleShipYaw() {
@@ -254,6 +253,7 @@ public class ShipController : MonoBehaviour {
             selectedTurretGroupIndex = 0;
         }
         if (isTargeting) {
+            UnhighlightModules();
             Events.instance.Raise(new ChangeGameCameraEvent(targetingCameras[selectedTurretGroupIndex], false));
         }
     }
@@ -268,6 +268,14 @@ public class ShipController : MonoBehaviour {
 
     public void OnLockTarget() {
         //print("TagetLock input action called!");
-        HandleTargetLocking(turretGroups[selectedTurretGroupIndex], GetModuleInSight());
+        if (isTargeting) {
+            HandleTargetLocking(turretGroups[selectedTurretGroupIndex], GetModuleInSight());
+        }
+    }
+
+    public void DebugSetAllTurretsTarget(ShipModule tgt) {
+        for (int i = 0; i < turretGroups.Count; i++) {
+            LockOnTarget(turretGroups[i], tgt);
+        }
     }
 }
