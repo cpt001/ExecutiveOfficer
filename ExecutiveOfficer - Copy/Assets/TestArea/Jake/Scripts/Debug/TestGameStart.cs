@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TestGameStart : MonoBehaviour {
     //player ship ref
-    public ShipController playerShip;
+    public PlayerShipController playerShip;
     //target rb
     public Rigidbody targetRB;
     //target module
