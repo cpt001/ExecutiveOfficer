@@ -2239,7 +2239,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712225224}
-  m_LocalRotation: {x: -0.3843252, y: 0.34800097, z: 0.15919302, w: 0.8401471}
+  m_LocalRotation: {x: -0.3843252, y: 0.348001, z: 0.15919304, w: 0.8401471}
   m_LocalPosition: {x: 0, y: 0, z: -0.000007152557}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2303,7 +2303,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 776059464}
-  m_LocalRotation: {x: -0.4154743, y: 0.045299012, z: 0.020722033, w: 0.9082399}
+  m_LocalRotation: {x: -0.41547433, y: 0.04529904, z: 0.020722045, w: 0.9082399}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3521,7 +3521,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047386961}
-  m_LocalRotation: {x: -0.36902046, y: 0.35083172, z: 0.15285358, w: 0.84698105}
+  m_LocalRotation: {x: -0.36902046, y: 0.35083178, z: 0.15285362, w: 0.846981}
   m_LocalPosition: {x: 0, y: 0, z: -0.000007152557}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3595,8 +3595,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2053681226}
-  m_LocalRotation: {x: -0.35355327, y: 0.35355398, z: 0.14644684, w: 0.85355324}
-  m_LocalPosition: {x: 0, y: 0, z: -0.000039339062}
+  m_LocalRotation: {x: -0.35355327, y: 0.353554, z: 0.14644685, w: 0.8535532}
+  m_LocalPosition: {x: 0, y: 0, z: -0.000010728835}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 493473862}
@@ -3958,6 +3958,22 @@ PrefabInstance:
       propertyPath: swivelSpeed
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 2293839019188936564, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7654216237015754633, guid: b3992e3663e0942488cbef3e526f212a,
+        type: 3}
+    - target: {fileID: 2293839019188936564, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2293839019188936564, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMax
+      value: 4.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2428477444143585593, guid: e3e42c019de96ba478e16a7304cf2579,
         type: 3}
       propertyPath: m_IsActive
@@ -3988,6 +4004,22 @@ PrefabInstance:
       propertyPath: swivelSpeed
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 4367745651240235570, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7654216237015754633, guid: b3992e3663e0942488cbef3e526f212a,
+        type: 3}
+    - target: {fileID: 4367745651240235570, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367745651240235570, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMax
+      value: 4.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4608717634139353703, guid: e3e42c019de96ba478e16a7304cf2579,
         type: 3}
       propertyPath: swivelXDownwardsDegrees
@@ -3997,6 +4029,22 @@ PrefabInstance:
         type: 3}
       propertyPath: swivelSpeed
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4608717634139353703, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7654216237015754633, guid: b3992e3663e0942488cbef3e526f212a,
+        type: 3}
+    - target: {fileID: 4608717634139353703, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4608717634139353703, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMax
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 4715130855672509755, guid: e3e42c019de96ba478e16a7304cf2579,
         type: 3}
@@ -4028,6 +4076,22 @@ PrefabInstance:
       propertyPath: swivelSpeed
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 5913945200327565193, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7654216237015754633, guid: b3992e3663e0942488cbef3e526f212a,
+        type: 3}
+    - target: {fileID: 5913945200327565193, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5913945200327565193, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMax
+      value: 4.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6647722416913227312, guid: e3e42c019de96ba478e16a7304cf2579,
         type: 3}
       propertyPath: swivelXDownwardsDegrees
@@ -4037,6 +4101,22 @@ PrefabInstance:
         type: 3}
       propertyPath: swivelSpeed
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6647722416913227312, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7654216237015754633, guid: b3992e3663e0942488cbef3e526f212a,
+        type: 3}
+    - target: {fileID: 6647722416913227312, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6647722416913227312, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMax
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 7615013134253195640, guid: e3e42c019de96ba478e16a7304cf2579,
         type: 3}
@@ -4062,6 +4142,22 @@ PrefabInstance:
         type: 3}
       propertyPath: swivelSpeed
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8565670522565331500, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7654216237015754633, guid: b3992e3663e0942488cbef3e526f212a,
+        type: 3}
+    - target: {fileID: 8565670522565331500, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8565670522565331500, guid: e3e42c019de96ba478e16a7304cf2579,
+        type: 3}
+      propertyPath: fireRateMax
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 8600722459161023302, guid: e3e42c019de96ba478e16a7304cf2579,
         type: 3}

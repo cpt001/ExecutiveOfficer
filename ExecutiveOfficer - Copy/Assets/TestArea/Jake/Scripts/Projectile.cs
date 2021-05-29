@@ -11,6 +11,8 @@ public class Projectile : MonoBehaviour {
     private int damage = 0;
     private Rigidbody projectileRigidbody;
     private bool isArmed;
+    [SerializeField]
+    private GameObject explosionFX;
 
     public float MovementSpeed {
         get {
@@ -71,5 +73,10 @@ public class Projectile : MonoBehaviour {
         if (other.name == "TurretDome") {
             isArmed = true;
         }
+    }
+
+    private void OnDestroy()
+    {
+        Instantiate(explosionFX, transform.position, transform.rotation);
     }
 }

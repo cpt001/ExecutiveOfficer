@@ -10,7 +10,9 @@ public class NewTurret : MonoBehaviour {
     [SerializeField]
     private GameObject projectilePrefab = null;
     [SerializeField]
-    private float fireRate = 0.0f;
+    private float fireRateMin = 0.0f;
+    [SerializeField]
+    private float fireRateMax = 0.0f;
     private bool isLoaded = false;
     private bool isAimed = false;
     [SerializeField]
@@ -146,7 +148,7 @@ public class NewTurret : MonoBehaviour {
     }
 
     private IEnumerator ReloadTurret() {
-        yield return new WaitForSeconds(fireRate);
+        yield return new WaitForSeconds(Random.Range(fireRateMin, fireRateMax));
         isLoaded = true;
         yield break;
     }
