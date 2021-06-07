@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField]
+    [Tooltip("Temp varaible to allow player to control store")]
+    private KeyCode storeActivationKey = KeyCode.X;
+    public bool showStore;
+    public bool menuActive;
+
     public bool canRepairHull = true;
     public float hullTempHP;
     public bool canRepairArmor = true;
@@ -40,6 +46,23 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (menuActive)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        if (Input.GetKeyDown(storeActivationKey))
+        {
+            showStore = true;
+            menuActive = true;
+        }
+
         creditText.text = ("Galactic Credits: ") + GalacticCredits;
         #region Spending Allowances
         if (numSquadrons < maxNumSquadrons)

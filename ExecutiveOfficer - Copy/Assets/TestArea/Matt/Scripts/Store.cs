@@ -7,11 +7,16 @@ using UnityEngine.UI;
 public class Store : MonoBehaviour
 {
     /// <summary>
+    /// Critical Bug: PlayerWallet isn't stored in memory, and when store 'closes' the PlayerWallet is lost.
+    /// 
     /// Still to introduce to system
-    /// -Removal of inactive items from stores
-    /// -Prices still arent activated
     /// -Quantity view
+    /// -Restock Mechanic?
     /// </summary>
+    /// 
+    public GameObject storeMasterObject;
+    public GameObject storePromptText;
+
     public enum StoreType
     {
         Bazaar,         //Sells everything, price raised by 1.25x
@@ -28,6 +33,7 @@ public class Store : MonoBehaviour
     public PlayerManager playerWallet = null;
     public TextMeshProUGUI storeWalletText;
     public GameObject storePanel;
+    public bool allowedToDisplayStore = false;
     #region ButtonGOArray
     [Header("Button Information")]
     [Space]
@@ -129,6 +135,8 @@ public class Store : MonoBehaviour
     #endregion
     void Start()
     {
+        playerWallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
+
         typeOfStore = (StoreType)Random.Range(0, 6);    //Randomizes store contents
         storeTypeText.text = typeOfStore.ToString();
         #region Button Active False
@@ -151,6 +159,8 @@ public class Store : MonoBehaviour
         playerMainMunitions.maxValue = playerWallet.maxNumMainGunMunitions;
         playerMissiles.maxValue = playerWallet.maxNumMissiles;
         #endregion
+        storeMasterObject.SetActive(false);
+        storePromptText.SetActive(false);
         GenerateStore();
         PopulateStores();
     }
@@ -347,15 +357,29 @@ public class Store : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            allowedToDisplayStore = true;
             Debug.Log($"Player has entered {typeOfStore} range");
-            //Needs to display the store
+            storePromptText.SetActive(true);
             playerWallet = other.gameObject.GetComponent<PlayerManager>();
+            if (playerWallet.showStore == true && allowedToDisplayStore == true)
+            {
+                storeMasterObject.SetActive(true);
+                storePromptText.SetActive(false);
+            }
             storeWalletText.text = ("Galactic Credits: " + playerWallet.GalacticCredits);
         }
         else
         {
             playerWallet = null;
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        storePromptText.SetActive(false);
+        storeMasterObject.SetActive(false);
+        allowedToDisplayStore = false;
+        playerWallet.showStore = false;
     }
 
     #region Button Interactions for Purchase
@@ -476,13 +500,21 @@ public class Store : MonoBehaviour
 
     private void Update()
     {
-        playerHullHP.value = playerWallet.hullTempHP;
-        playerArmorHP.value = playerWallet.armorTempHP;
-        playerHardpointHp.value = playerWallet.hardPointTempHP;
-        playerNumSquadrons.value = playerWallet.numSquadrons;
-        playerNumFighterRepairs.value = playerWallet.numFighterRepairs;
-        playerLightMunitions.value = playerWallet.lightMunitions;
-        playerMainMunitions.value = playerWallet.mainGunMunitions;
-        playerMissiles.value = playerWallet.numMissiles;
+        if (playerWallet)
+        {
+            playerHullHP.value = playerWallet.hullTempHP;
+            playerArmorHP.value = playerWallet.armorTempHP;
+            playerHardpointHp.value = playerWallet.hardPointTempHP;
+            playerNumSquadrons.value = playerWallet.numSquadrons;
+            playerNumFighterRepairs.value = playerWallet.numFighterRepairs;
+            playerLightMunitions.value = playerWallet.lightMunitions;
+            playerMainMunitions.value = playerWallet.mainGunMunitions;
+            playerMissiles.value = playerWallet.numMissiles;
+
+            if (Input.GetKeyDown(KeyCode.Escape) && storeMasterObject.activeSelf == true)
+            {
+                storeMasterObject.SetActive(false);
+            }
+        }
     }
 }

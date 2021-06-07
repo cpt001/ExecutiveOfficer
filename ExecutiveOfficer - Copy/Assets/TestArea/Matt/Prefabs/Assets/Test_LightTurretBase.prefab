@@ -137,10 +137,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3fcdfc514b0b2847b5fafa3cfd993ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  barrelBase: {fileID: 0}
-  barrelEnd: {fileID: 0}
-  projectilePrefab: {fileID: 0}
-  fireRate: 0
+  turretHasMultipleBarrels: 0
+  barrelBase: {fileID: 5027366722468585317}
+  barrelEnd: {fileID: 1093453467731821679}
+  projectilePrefab: {fileID: 4800076213988902084, guid: 5c729c5dcd961c94ca8f6b780d104f06,
+    type: 3}
+  fireRateMin: 0
+  fireRateMax: 0
   swivelSpeed: 0
   swivelXDownwardsDegrees: 0
 --- !u!1 &1359629254788442370
@@ -267,6 +270,7 @@ Transform:
   - {fileID: 8898078505092898445}
   - {fileID: 8808975338335446166}
   - {fileID: 1625706128295765682}
+  - {fileID: 1093453467731821679}
   m_Father: {fileID: 1082660586194404368}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -330,3 +334,33 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.7693999, y: 1.0796001, z: 2.13254}
   m_Center: {x: 0, y: 0.98106, z: 0.55446994}
+--- !u!1 &8066857886580420362
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1093453467731821679}
+  m_Layer: 0
+  m_Name: BarrelEnd
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1093453467731821679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8066857886580420362}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5027366722468585317}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

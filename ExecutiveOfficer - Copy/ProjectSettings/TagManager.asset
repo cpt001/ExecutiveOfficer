@@ -12,6 +12,7 @@ TagManager:
   - FiringPosition
   - PathfindingNode
   - DamagePoint
+  - StarSystem
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - TurretColliders
   - ShipModules
   - PathfindingObstacle
-  - 
+  - ShipMainBody
   - 
   - 
   - 

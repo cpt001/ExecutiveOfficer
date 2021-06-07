@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class NewTurret : MonoBehaviour {
     [SerializeField]
+    [Tooltip("Unimplemented variable to allow for multiple barrels on a turret later down the line")]
+    private bool turretHasMultipleBarrels = false;
+    [SerializeField]
     private Transform barrelBase = null;
     [SerializeField]
     private Transform barrelEnd = null;

@@ -7,18 +7,19 @@ public class SimpleRaycast : MonoBehaviour
     public float castDistance = 2.0f;
     public float rayDuration = 1.0f;
 
-    public bool hitDetectionTest;
     private GameObject damageObject;
+
+    private LayerMask layerMask = 16;
 
     // Update is called once per frame
     void LateUpdate()
     {
         RaycastHit rayHit;
         Debug.DrawRay(transform.position, transform.forward, Color.red, rayDuration, depthTest: true);
-        if (Physics.Raycast(transform.position, transform.forward, out rayHit, castDistance))
+        if (Physics.Raycast(transform.position, transform.forward, out rayHit, castDistance, layerMask))
         {
             Debug.Log("Raycast Hit: " + rayHit);
-            if (rayHit.transform.tag == "Player")
+            if (rayHit.transform.tag == "Player" || rayHit.transform.GetComponentInParent<Transform>().tag == "Player")
             {
                 damageObject = FindClosestDamageable();
                 Debug.Log("Impacted ship: " + rayHit.transform.name + " Damage applied to object: " + damageObject.name);
@@ -32,7 +33,7 @@ public class SimpleRaycast : MonoBehaviour
 
     public void DamageTurret()
     {
-        Debug.Log("Projectile Hit Turret");
+        Debug.Log("Projectile Hit: " + gameObject.name);
     }
 
     /// <summary>
