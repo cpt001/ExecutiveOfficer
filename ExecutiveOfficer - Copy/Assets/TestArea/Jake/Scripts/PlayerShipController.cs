@@ -26,6 +26,7 @@ public class PlayerShipController : ShipController {
 
     public override void Awake() {
         Init();
+        base.Awake();
     }
 
     public override void Update() {
