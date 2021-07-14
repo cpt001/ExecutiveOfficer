@@ -1,11 +1,15 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class NewTurret : MonoBehaviour {
     [SerializeField]
     [Tooltip("Unimplemented variable to allow for multiple barrels on a turret later down the line")]
     private bool turretHasMultipleBarrels = false;
+    [SerializeField]
+    private bool isHeavyTurret;
+    public CinemachineImpulseDefinition impulseDefinition = null;
     [SerializeField]
     private Transform barrelBase = null;
     [SerializeField]
@@ -72,6 +76,7 @@ public class NewTurret : MonoBehaviour {
         shipRigidbody = GameFunctionHelper.GetRootRigidBody(transform);
         projectileSpeed = projectilePrefab.GetComponent<Projectile>().MovementSpeed;
         projectileSize = projectilePrefab.GetComponent<BoxCollider>().size / 2.0f;
+        //impulseDefinition = GetComponent<CinemachineImpulseSource>();   //Impulse source is component on object
     }
 
     private void Update() {
@@ -108,6 +113,10 @@ public class NewTurret : MonoBehaviour {
     private void Fire() {
         if (isLoaded) {
             if (isAimed) {
+                if (isHeavyTurret)
+                {
+                    impulseDefinition.CreateEvent(transform.position, Vector3.forward); //Accordingly, the impulse fires at pos, then fires in 'direction?'
+                }
                 LaunchProjectile();
                 isLoaded = false;
                 StartCoroutine(ReloadTurret());

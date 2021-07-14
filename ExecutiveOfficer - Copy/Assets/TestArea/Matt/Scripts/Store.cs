@@ -8,6 +8,7 @@ public class Store : MonoBehaviour
 {
     /// <summary>
     /// Critical Bug: PlayerWallet isn't stored in memory, and when store 'closes' the PlayerWallet is lost.
+    /// MA - Maintains
     /// 
     /// Still to introduce to system
     /// -Quantity view
