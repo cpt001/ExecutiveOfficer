@@ -13,6 +13,7 @@ TagManager:
   - PathfindingNode
   - DamagePoint
   - StarSystem
+  - DamageContainer
   layers:
   - Default
   - TransparentFX
