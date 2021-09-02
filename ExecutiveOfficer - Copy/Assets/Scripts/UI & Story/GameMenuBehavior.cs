@@ -15,29 +15,31 @@ public class GameMenuBehavior : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            pauseActive = true;
+            PauseGame();
         }
+    }
 
-        if (pauseActive)
-        {
-            gameMenu.SetActive(false);
-            pauseMenu.SetActive(true);
-        }
-        else
-        {
-            gameMenu.SetActive(true);
-            pauseMenu.SetActive(false);
-        }
+    public void PauseGame()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0;
+        gameMenu.SetActive(false);
+        pauseMenu.SetActive(true);
     }
 
     public void ResumeGame()
     {
-        pauseActive = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Time.timeScale = 1;
+        gameMenu.SetActive(true);
+        pauseMenu.SetActive(false);
     }
 
     public void DisplaySettings()
     {
-
+        Debug.Log("Settings not implemented");
     }
 
     public void QuitToMenu()

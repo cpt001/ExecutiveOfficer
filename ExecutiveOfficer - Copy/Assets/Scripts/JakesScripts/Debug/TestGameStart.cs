@@ -25,7 +25,7 @@ public class TestGameStart : MonoBehaviour {
     }
 
     private void Init() {
-        Events.instance.Raise(new EnterFlightEvent());
+        
         playerShip.DebugSetAllTurretsTarget(targetModule);
         AccelerateTargetRigidBody();
     }

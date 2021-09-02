@@ -41,6 +41,7 @@ public class PlayerShipController : ShipController {
         gameCamera = Camera.main;
         shipModuleLayer = LayerMask.GetMask("ShipModules");
         BindInputActions();
+        Events.instance.Raise(new EnterFlightEvent());
     }
 
     private void OnEnable() {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class SimpleHealth : MonoBehaviour
 {
     public float mainHP = 100.0f;
-    public GameObject destroyedObject;
+    //public GameObject destroyedObject;
     public float damageTaken = 0;
     public bool damageApplied;
 
@@ -24,7 +24,8 @@ public class SimpleHealth : MonoBehaviour
 
     public void Kill()
     {
-        Instantiate(destroyedObject, transform.position, transform.rotation);
+        //Instantiate(destroyedObject, transform.position, transform.rotation);
+        GetComponent<Material>().color = Color.red;
         Destroy(gameObject);
     }
 
