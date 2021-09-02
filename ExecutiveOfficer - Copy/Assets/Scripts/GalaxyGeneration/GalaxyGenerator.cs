@@ -113,6 +113,23 @@ public class GalaxyGenerator : MonoBehaviour
             {
                 canGenerate = false;
             }
+            AssignSectorData(newSystem, i);
+        }
+        AssignGalaxyData();
+    }
+
+    void AssignGalaxyData() {
+        Galaxy tmpGalaxy = GetComponent<Galaxy>();
+        if (tmpGalaxy != null) {
+            tmpGalaxy.Data.ArmCount = genControl.NumberArms;
+        }
+    }
+
+    void AssignSectorData(GameObject sectorObject, int nodeIndex) {
+        GalaxySector tmpSector = sectorObject.GetComponent<GalaxySector>();
+        if (tmpSector != null) {
+            tmpSector.SectorIndex = nodeIndex;
+            tmpSector.GalaxyArmIndex = nodeIndex % (int)genControl.NumberArms;
         }
     }
 }

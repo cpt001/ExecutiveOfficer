@@ -112,7 +112,7 @@ public class GenerationController : MonoBehaviour
             //Debug.Log("Generation Triggerd on obj: " + gmg[i].gameObject.name);
             gmg[i].ButtonControlGenerateStars();
         }
-        PlayerLocator();
+        //PlayerLocator();
     }
 
     public void Generation()
