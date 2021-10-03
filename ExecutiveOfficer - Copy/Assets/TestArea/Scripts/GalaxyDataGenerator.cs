@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GalaxyDataGenerator : MonoBehaviour {
+    [Header("Galaxy Generation")]
     //private List<StarSystem> starSystems = new List<StarSystem>();
     private Galaxy galaxyInstance = null;
     [SerializeField]
@@ -14,6 +15,43 @@ public class GalaxyDataGenerator : MonoBehaviour {
     //private int systemConnections = 0;
     //[SerializeField]
     //private int armSegregationSectorCutoff = 0;
+    [Header("Star System Generation")]
+    [SerializeField]
+    private int systemBodyCountMin = 0;
+    [SerializeField]
+    private int systemBodyCountMax = 0;
+    [SerializeField]
+    private float systemSceneSize = 0.0f;
+    [Header("Solid Body Size Limits")]
+    [SerializeField]
+    private float beanSizeMin = 0.0f;
+    [SerializeField]
+    private float beanSizeMax = 0.0f;
+    [SerializeField]
+    private float cyclopsSizeMin = 0.0f;
+    [SerializeField]
+    private float cyclopsSizeMax = 0.0f;
+    [SerializeField]
+    private float earthSizeMin = 0.0f;
+    [SerializeField]
+    private float earthSizeMax = 0.0f;
+    [SerializeField]
+    private float eyeSizeMin = 0.0f;
+    [SerializeField]
+    private float eyeSizeMax = 0.0f;
+    [SerializeField]
+    private float fierySizeMin = 0.0f;
+    [SerializeField]
+    private float fierySizeMax = 0.0f;
+    [SerializeField]
+    private float icySizeMin = 0.0f;
+    [SerializeField]
+    private float icySizeMax = 0.0f;
+    [SerializeField]
+    private float moonSizeMin = 0.0f;
+    [SerializeField]
+    private float moonSizeMax = 0.0f;
+
 
     private void Awake() {
         Init();
@@ -23,54 +61,7 @@ public class GalaxyDataGenerator : MonoBehaviour {
         galaxyInstance = GetComponent<Galaxy>();
     }
 
-    public void GenerateGalaxyData() {
-        StartCoroutine(GenerateGalaxyDataCoroutine());
-    }
-
-    private IEnumerator GenerateGalaxyDataCoroutine() {
-        GalaxyData tmpGalaxyData = new GalaxyData();
-        RemoveGalaxyGenerationComponents();
-        GenerateSectorBounds();
-        tmpGalaxyData.StarSystems = GetStarSystemObjects();
-        ReduceGalaxySize(tmpGalaxyData, desiredSystemCount);
-        yield return new WaitForSeconds(0);
-        for (int i = 0; i < tmpGalaxyData.StarSystems.Count; i++) {
-            tmpGalaxyData.StarSystems[i].SystemData = GenerateStarSystemData(tmpGalaxyData.StarSystems[i], tmpGalaxyData.StarSystems);
-        }
-        GenerateStarSystemConnections(tmpGalaxyData.StarSystems);
-        galaxyInstance.Data = tmpGalaxyData;
-        DrawSystemConnections(galaxyInstance.Data.StarSystems);
-        DebugSystemConnections();
-        yield return null;
-    }
-
-    private void RemoveGalaxyGenerationComponents() {
-        List<Type> componentsToRemove = new List<Type> { typeof(GalaxyGenerator), typeof(GenerationController), typeof(ParticleSystem), typeof(GalacticMapGenerator) };
-        Component[] comps = GetComponentsInChildren<Component>();
-        for (int i = 0; i < comps.Length; i++) {
-            if (componentsToRemove.Contains(comps[i].GetType())) {
-                Destroy(comps[i]);
-            }
-        }
-    }
-
-    private void GenerateSectorBounds() {
-        //Bounds tmpBounds = new Bounds();
-        List<Renderer> tmpRenderers = new List<Renderer>();
-        List<GalaxySector> tmpSectors = new List<GalaxySector>();
-        tmpSectors.AddRange(GetComponentsInChildren<GalaxySector>());
-        for (int i = 0; i < tmpSectors.Count; i++) {
-            //calculate and assign bounds
-            tmpRenderers.AddRange(tmpSectors[i].GetComponentsInChildren<Renderer>());
-            Bounds tmpBounds = tmpRenderers[0].bounds;
-            for (int x = 0; x < tmpRenderers.Count; x++) {
-                tmpBounds.Encapsulate(tmpRenderers[x].bounds);
-            }
-            tmpSectors[i].SectorBounds = tmpBounds;
-            tmpRenderers.Clear();
-        }
-    }
-
+    #region Galaxy Initialization Functions
     private void ReduceGalaxySize(GalaxyData galaxy, int desiredSize) {
         List<StarSystem> systemsToRemove = new List<StarSystem>();
         int numOfSystemsToRemove = galaxy.StarSystems.Count - desiredSize;
@@ -100,6 +91,45 @@ public class GalaxyDataGenerator : MonoBehaviour {
             //print("Galaxy size: " + galaxy.StarSystems.Count + "!");
         }
         //print("Galaxy size: " + galaxy.StarSystems.Count + "!");
+    }
+
+    private void RemoveGalaxyGenerationComponents() {
+        List<Type> componentsToRemove = new List<Type> { typeof(GalaxyGenerator), typeof(GenerationController), typeof(ParticleSystem), typeof(GalacticMapGenerator) };
+        Component[] comps = GetComponentsInChildren<Component>();
+        for (int i = 0; i < comps.Length; i++) {
+            if (componentsToRemove.Contains(comps[i].GetType())) {
+                Destroy(comps[i]);
+            }
+        }
+    }
+
+    private List<StarSystem> GetStarSystemObjects() {
+        List<StarSystem> tmpSystems = new List<StarSystem>();
+        tmpSystems.AddRange(GetComponentsInChildren<StarSystem>());
+        return tmpSystems;
+    }
+    #endregion
+
+    #region Data Generation Functions
+    public void GenerateGalaxyData() {
+        StartCoroutine(GenerateGalaxyDataCoroutine());
+    }
+
+    private IEnumerator GenerateGalaxyDataCoroutine() {
+        GalaxyData tmpGalaxyData = new GalaxyData();
+        RemoveGalaxyGenerationComponents();
+        //GenerateSectorBounds();
+        tmpGalaxyData.StarSystems = GetStarSystemObjects();
+        ReduceGalaxySize(tmpGalaxyData, desiredSystemCount);
+        yield return new WaitForSeconds(0);
+        for (int i = 0; i < tmpGalaxyData.StarSystems.Count; i++) {
+            tmpGalaxyData.StarSystems[i].SystemData = GenerateStarSystemData(tmpGalaxyData.StarSystems[i], tmpGalaxyData.StarSystems);
+        }
+        GenerateStarSystemConnections(tmpGalaxyData.StarSystems);
+        galaxyInstance.Data = tmpGalaxyData;
+        DrawSystemConnections(galaxyInstance.Data.StarSystems);
+        DebugSystemConnections();
+        yield return null;
     }
 
     private StarSystemData GenerateStarSystemData(StarSystem system, List<StarSystem> allSystems) {
@@ -156,17 +186,72 @@ public class GalaxyDataGenerator : MonoBehaviour {
         return tmpStarData;
     }
 
+    int GenerateSystemBodyCount() {
+        return UnityEngine.Random.Range(systemBodyCountMin, systemBodyCountMax);
+
+    }
+
+    void GenerateSystemBodies() {
+        int bodyCount = GenerateSystemBodyCount();
+        for (int i = 0; i < bodyCount; i++) {
+            GenerateSystemBody();
+        }
+    }
+
+    void GenerateSystemBody() {
+        SolidBodyType bodyType = GenerateSolidBodyType();
+    }
+
+    SolidBodyType GenerateSolidBodyType() {
+        int typeIndex = UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(SolidBodyType)).Length);
+        return (SolidBodyType)typeIndex;
+    }
+
+    float GenerateBodySize(SolidBodyType bodyType) {
+        float bodySize = 0.0f;
+        switch (bodyType) {
+            case SolidBodyType.BEAN:
+            bodySize = UnityEngine.Random.Range(beanSizeMin, beanSizeMax);
+            break;
+            case SolidBodyType.CYCLOPS:
+            bodySize = UnityEngine.Random.Range(cyclopsSizeMin, cyclopsSizeMax);
+            break;
+            case SolidBodyType.EARTH:
+            bodySize = UnityEngine.Random.Range(earthSizeMin, earthSizeMax);
+            break;
+            case SolidBodyType.EYE:
+            bodySize = UnityEngine.Random.Range(eyeSizeMin, eyeSizeMax);
+            break;
+            case SolidBodyType.FIERY:
+            bodySize = UnityEngine.Random.Range(fierySizeMin, fierySizeMax);
+            break;
+            case SolidBodyType.ICY:
+            bodySize = UnityEngine.Random.Range(icySizeMin, icySizeMax);
+            break;
+            case SolidBodyType.MOON:
+            bodySize = UnityEngine.Random.Range(moonSizeMin, moonSizeMax);
+            break;
+        }
+        return bodySize;
+    }
+
+    Vector3 GenerateScenePosition() {
+        Vector3 scenePos = Vector3.zero;
+        //validate pos
+        return scenePos;
+    }
+
+    //private bool IsScenePositionValid() {
+
+    //}
+    #endregion
+
+    #region System Connection Functions
     void GenerateStarSystemConnections(List<StarSystem> allSystems) {
         List<StarSystem> sortedSystems = SortStarSystemsByDistanceFromCenter(allSystems);
         GenerateCenterConnections(sortedSystems);
         GenerateBasicConnections(sortedSystems);
         GenerateRemainingConnections(sortedSystems);
-    }
-
-    private List<StarSystem> GetStarSystemObjects() {
-        List<StarSystem> tmpSystems = new List<StarSystem>();
-        tmpSystems.AddRange(GetComponentsInChildren<StarSystem>());
-        return tmpSystems;
     }
 
     private List<StarSystem> SortStarSystemsByDistanceFromCenter(List<StarSystem> allSystems) {
@@ -363,12 +448,29 @@ public class GalaxyDataGenerator : MonoBehaviour {
         return false;
     }
 
-    private bool IsSectorOverlapping(GalaxySector currentSector, GalaxySector connectionSector) {
-        if (currentSector.SectorBounds.Intersects(connectionSector.SectorBounds)) {
-            return true;
-        }
-        return false;
-    }
+    //private void GenerateSectorBounds() {
+    //    //Bounds tmpBounds = new Bounds();
+    //    List<Renderer> tmpRenderers = new List<Renderer>();
+    //    List<GalaxySector> tmpSectors = new List<GalaxySector>();
+    //    tmpSectors.AddRange(GetComponentsInChildren<GalaxySector>());
+    //    for (int i = 0; i < tmpSectors.Count; i++) {
+    //        //calculate and assign bounds
+    //        tmpRenderers.AddRange(tmpSectors[i].GetComponentsInChildren<Renderer>());
+    //        Bounds tmpBounds = tmpRenderers[0].bounds;
+    //        for (int x = 0; x < tmpRenderers.Count; x++) {
+    //            tmpBounds.Encapsulate(tmpRenderers[x].bounds);
+    //        }
+    //        tmpSectors[i].SectorBounds = tmpBounds;
+    //        tmpRenderers.Clear();
+    //    }
+    //}
+
+    //private bool IsSectorOverlapping(GalaxySector currentSector, GalaxySector connectionSector) {
+    //    if (currentSector.SectorBounds.Intersects(connectionSector.SectorBounds)) {
+    //        return true;
+    //    }
+    //    return false;
+    //}
 
     private bool SystemDistancePairListContainsSystem(List<KeyValuePair<StarSystem, float>> systemPairList, StarSystem system) {
         for (int i = 0; i < systemPairList.Count; i++) {
@@ -388,7 +490,9 @@ public class GalaxyDataGenerator : MonoBehaviour {
     //List<StarSystem> GenerateSystemConnections(StarSystem starSystem, List<StarSystem> allSystems) {
     //    return GetClosestStarSystems(starSystem, systemConnections, allSystems);
     //}
+    #endregion
 
+    #region Draw/Debug Functions
     void DrawSystemConnections(List<StarSystem> allSystems) {
         for (int i = 0; i < allSystems.Count; i++) {
             LineRenderer lr = allSystems[i].gameObject.AddComponent<LineRenderer>();
@@ -425,4 +529,5 @@ public class GalaxyDataGenerator : MonoBehaviour {
             print("Star system: " + i + " has " + galaxyInstance.Data.StarSystems[i].SystemData.ConnectedStarSystems.Count + " connections!");
         }
     }
+    #endregion
 }

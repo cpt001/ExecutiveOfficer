@@ -55,8 +55,8 @@ public class AIShipController : ShipController {
     private void HandleAIShipMovement() {
         if (!hasArrived) {
             if (Vector3.Distance(transform.position, destinationPoint.position) > destinationArrivalThreshold) {
-                ApplyShipMovementForces(debugNode.MovementForces);
-                //ApplyShipMovementForces(GetOptimalMovementNode().MovementForces);
+                //ApplyShipMovementForces(debugNode.MovementForces);
+                ApplyShipMovementForces(GetOptimalMovementNode().MovementForces);
                 return;
             }
             hasArrived = true;
