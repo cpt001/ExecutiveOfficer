@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -68,6 +68,11 @@ public class PlayerShipController : ShipController {
         inputActions.ShipControl.Pitch.performed += ctx => inputPitchAxis = ctx.ReadValue<float>();
         inputActions.ShipControl.Roll.performed += ctx => inputRollAxis = ctx.ReadValue<float>();
         inputActions.ShipControl.Yaw.performed += ctx => inputYawAxis = ctx.ReadValue<float>();
+    }
+
+    private void Thrust_performed(InputAction.CallbackContext obj)
+    {
+        throw new System.NotImplementedException();
     }
 
     #region TargetingMethods

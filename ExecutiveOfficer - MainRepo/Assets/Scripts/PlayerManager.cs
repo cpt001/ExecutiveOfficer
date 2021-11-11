@@ -43,6 +43,15 @@ public class PlayerManager : MonoBehaviour
     public float GalacticCredits = 25000;
     public TextMeshProUGUI creditText;
 
+    private void Awake()
+    {
+        if (!gameObject.activeInHierarchy)
+        {
+            gameObject.SetActive(true);
+            menuActive = false;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

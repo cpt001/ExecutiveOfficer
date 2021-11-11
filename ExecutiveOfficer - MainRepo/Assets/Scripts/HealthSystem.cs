@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Create a simple list that grabs all children, place on each armor container
+/// Create a list of lists
+/// </summary>
+/// 
 public class HealthSystem : MonoBehaviour
 {
     //Here's how this works. Players beat through section armors. 
@@ -52,7 +57,6 @@ public class HealthSystem : MonoBehaviour
     public float[] armoryHealth;        //Deals 5 strint damage
     public float[] munitionsStoreHealth;//Deals 30 strint damage, ship will fire less often, and eventually stop firing all together.
     public float[] engineHealth;        //Deals 10 strint damage, ship will drift.
-    public float[] sensorHealth;        //Deals 5 strint damage, ship accuracy will reduce.
 
     /// <summary>
     /// Armor holder is the master object containing all armor collisions.
@@ -63,41 +67,40 @@ public class HealthSystem : MonoBehaviour
     public GameObject hardPointHolder;
     private Collider[] HardPointColliders;
 
+    /// <summary>
+    /// maybe populate master list
+    /// then populate sublists from there instead of dynamically creating them?
+    /// </summary>
+    /// 
+    public Transform armorContainer;
 
     // Start is called before the first frame update
     void Start()
     {
-        /*foreach(GameObject armor in GameObject.FindGameObjectsWithTag("DamagePoint")) //This works, but not to the end i need it too
+        if (transform.Find("ArmorContainer"))
         {
-            MasterArmorList.Add(armor);
-        }*/
 
-
-        if (transform.Find("ArmorContainer"))   //Looks for the armor container -- it finds it, but it's not the default search point. it starts from root
-        {
-            Transform ArmorTarget = transform.Find("ArmorContainer");
-            //Debug.Log("Armor Container found");
-            foreach (Transform allSubObjects in ArmorTarget)    //Looks for each gameobject listed as a child
+            armorContainer = gameObject.transform.Find("ArmorContainer");
+            foreach (Transform child in armorContainer.transform)
             {
-                //Debug.Log("Subobjects found");
-                string listName = gameObject.name;
-                CreateList(listName);   //List created here with objects as name
-                //Debug.Log("DamageContainer has objects: " + allSubObjects);
-
-                foreach (Transform containedArmor in ArmorTarget.GetComponentInChildren<Transform>())   //Foreach object listed as a child of the damage container
+                if (child != null)  //Theoretically should only fire if there's child objects? Might be better to restructure armor container to contain vitals instead.
                 {
-                    //Debug.Log("Contained armor has objects: " + containedArmor);
-                    //List populated here; how do you access this new list?
-                    
-                    if (containedArmor == null)
+                    foreach (ShipModule aL in child.GetComponentInChildren<ArmorList>().moduleList)    //This still only gets the top layer
                     {
-                        //Debug.LogError("ArmorContainer has control points, but no damage points!");
+                        if (aL != null)
+                        {
+                            Debug.Log("Module Found: " + aL.name);
+                        }
+                        if (!aL)
+                        {
+                            Debug.Log("No Shipmodule Found");
+                            break;
+                        }
                     }
                 }
-                
-                if (allSubObjects == null)
+                else
                 {
-                    Debug.LogError("ArmorContainer has no control points!");
+                    Debug.Log("No Child found; ensure there's shipmodule components on attached armor pieces!");
                     break;
                 }
             }

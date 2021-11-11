@@ -8,6 +8,8 @@ public class GameMenuBehavior : MonoBehaviour
 {
     public GameObject gameMenu;
     public GameObject pauseMenu;
+    public PlayerManager playerManager;
+
 
     private bool pauseActive;
 
@@ -21,17 +23,15 @@ public class GameMenuBehavior : MonoBehaviour
 
     public void PauseGame()
     {
-        //Cursor.lockState = CursorLockMode.None;
-        //Cursor.visible = true;
         Time.timeScale = 0;
+        playerManager.menuActive = true;
         gameMenu.SetActive(false);
         pauseMenu.SetActive(true);
     }
 
     public void ResumeGame()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
+        playerManager.menuActive = false;
         Time.timeScale = 1;
         gameMenu.SetActive(true);
         pauseMenu.SetActive(false);

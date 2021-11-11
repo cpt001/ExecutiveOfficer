@@ -5,7 +5,7 @@ using System.Linq;
 
 public class SimpleHealth : MonoBehaviour
 {
-    public float mainHP = 100.0f;
+    //public float mainHP = 100.0f;
     //public GameObject destroyedObject;
     public float damageTaken = 0;
     public bool damageApplied;

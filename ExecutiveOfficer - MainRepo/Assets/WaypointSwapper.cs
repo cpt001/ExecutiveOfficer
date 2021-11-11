@@ -5,11 +5,12 @@ using UnityEngine;
 public class WaypointSwapper : MonoBehaviour
 {
     public AIShipControllerFinal npcController;
-    public Transform wp1;
-    public Transform wp2;
-    public Transform wp3;
-    public Transform wp4;
-    public Transform wp5;
+    public Transform waypoint1;
+    public Transform waypoint2;
+    public Transform waypoint3;
+    public Transform waypoint4;
+    public Transform waypoint5;
+    private bool swapLocked;
 
     public enum Waypoints
     {
@@ -30,47 +31,55 @@ public class WaypointSwapper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit rayhit;
-        if (Physics.SphereCast(transform.position, 10.0f, Vector3.forward, out rayhit))
+        if (currentWaypoint == Waypoints.wp5 + 1)
         {
-            if (rayhit.transform.gameObject == wp1 || rayhit.transform.gameObject == wp2 || rayhit.transform.gameObject == wp3 || rayhit.transform.gameObject == wp4|| rayhit.transform.gameObject == wp5)
-            {
-                currentWaypoint += 1;
-                if (currentWaypoint == Waypoints.wp5 + 1)
-                {
-                    currentWaypoint = 0;
-                }
-            }
+            currentWaypoint = 0;
         }
 
         switch (currentWaypoint)
         {
             case Waypoints.wp1:
                 {
-                    npcController.destinationPoint = wp1;
+                    npcController.destinationPoint = waypoint1;
                     break;
                 }
 
             case Waypoints.wp2:
                 {
-                    npcController.destinationPoint = wp2;
+                    npcController.destinationPoint = waypoint2;
                     break;
                 }
             case Waypoints.wp3:
                 {
-                    npcController.destinationPoint = wp3;
+                    npcController.destinationPoint = waypoint3;
                     break;
                 }
             case Waypoints.wp4:
                 {
-                    npcController.destinationPoint = wp4;
+                    npcController.destinationPoint = waypoint4;
                     break;
                 }
             case Waypoints.wp5:
                 {
-                    npcController.destinationPoint = wp5;
+                    npcController.destinationPoint = waypoint5;
                     break;
                 }
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform == waypoint1 || other.transform == waypoint2 || other.transform == waypoint3 || other.transform == waypoint4 || other.transform == waypoint5 && !swapLocked)
+        {
+            currentWaypoint++;
+            swapLocked = true;
+            StartCoroutine(SwapLock());
+        }
+    }
+
+    private IEnumerator SwapLock()
+    {
+        yield return new WaitForSeconds(30.0f);
+        swapLocked = false;
     }
 }

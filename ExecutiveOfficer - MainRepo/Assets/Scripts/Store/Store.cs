@@ -144,7 +144,7 @@ public class Store : MonoBehaviour
     #endregion
     void Start()
     {
-        playerWallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
+        //playerWallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
 
         typeOfStore = (StoreType)Random.Range(0, 6);    //Randomizes store contents
         storeTypeText.text = typeOfStore.ToString();
